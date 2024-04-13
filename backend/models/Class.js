@@ -10,12 +10,3 @@ const classSchema = new mongoose.Schema({
 
 const Class = mongoose.model('Class', classSchema);
 
-// Product model
-const productSchema = new mongoose.Schema({
-    name: String,
-    description: String,
-    price: Number,
-    quantity: Number
-});
-
-const Product = mongoose.model('Product', productSchema);
