@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
 
+const routes = require('./routes'); // Import the centralized routes
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -18,11 +20,8 @@ mongoose.connect(process.env.MONGODB_URI, {
 .then(() => console.log('MongoDB connected'))
 .catch(err => console.log(err));
 
-// Routes
-app.use('/api/schedule', require('./routes/schedule'));
-app.use('/api/programs', require('./routes/programs'));
-app.use('/api/instructors', require('./routes/instructors'));
-app.use('/api/contact', require('./routes/contact'));
+// Use centralized routes
+app.use('/api', routes);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
