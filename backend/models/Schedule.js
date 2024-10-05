@@ -1,91 +1,28 @@
-// server/models/Schedule.js
-
 const mongoose = require('mongoose');
 
-// Class schema for each class
+// Define the Class schema
 const ClassSchema = new mongoose.Schema({
   time: String,
   name: String,
-  instructor: { type: String, default: "TBD" }, // Optional instructor field
-  level: { type: String, default: "All Levels" } // Optional level field
+  instructor: String,
+  level: String,
 });
 
-// Schema for a day's schedule
+// Define the Day schema
 const DayScheduleSchema = new mongoose.Schema({
   day: String,
   classes: [ClassSchema],
 });
 
-// Main schedule schema for a month
+// Define the main Schedule schema
 const ScheduleSchema = new mongoose.Schema({
   month: String,
   year: Number,
   days: [DayScheduleSchema],
 });
 
-// Example schedule for the month
-const exampleSchedule = new ScheduleSchema({
-  month: "October",
-  year: 2024,
-  days: [
-    {
-      day: "Monday",
-      classes: [
-        { time: "5:00pm-6:00pm", name: "Bullyproof/Junior Grapplers" },
-        { time: "6:00pm-7:00pm", name: "Combatives" },
-        { time: "7:00pm-8:00pm", name: "Master Cycle" },
-      ]
-    },
-    {
-      day: "Tuesday",
-      classes: [
-        { time: "5:00pm", name: "Bullyproof/Junior Grapplers" },
-        { time: "6:00pm", name: "Combatives" },
-        { time: "7:00pm", name: "Master Cycle" },
-      ]
-    },
-    {
-      day: "Wednesday",
-      classes: [
-        { time: "5:00pm", name: "Bullyproof/Junior Grapplers" },
-        { time: "6:00pm", name: "Combatives" },
-        { time: "7:00pm", name: "Master Cycle" },
-      ]
-    },
-    {
-      day: "Thursday",
-      classes: [
-        { time: "5:00pm", name: "Bullyproof/Junior Grapplers" },
-        { time: "6:00pm", name: "Combatives" },
-        { time: "7:00pm", name: "Master Cycle" },
-      ]
-    },
-    {
-      day: "Friday",
-      classes: [
-        { time: "5:00pm-6:00pm", name: "Bullyproof/Junior Grapplers" },
-        { time: "6:00pm-7:00pm", name: "Combatives" },
-        { time: "7:00pm-8:00pm", name: "Master Cycle" },
-      ]
-    },
-    {
-      day: "Saturday",
-      classes: [
-        { time: "10:00am-11:00am", name: "Bullyproof/Junior Grapplers" },
-        { time: "11:00am-12:00pm", name: "Combatives" },
-        { time: "12:00pm-1:00pm", name: "Master Cycle" },
-        { time: "6:00pm-7:00pm", name: "Combatives" },
-        { time: "7:00pm-8:00pm", name: "Master Cycle" },
-      ]
-    },
-    {
-      day: "Sunday",
-      classes: [
-        { time: "4:00pm-5:00pm", name: "Open Mat", level: "Blue belt+" },
-        { time: "5:00pm-6:00pm", name: "Reflex Development", level: "All Levels" },
-      ]
-    }
-  ]
-});
+// Create a model from the schema (This is the model you should use in your controllers)
+const Schedule = mongoose.model('Schedule', ScheduleSchema);
 
-module.exports = mongoose.model('Schedule', ScheduleSchema);
+// Do not create an instance of the schema here; return the model
+module.exports = Schedule;
