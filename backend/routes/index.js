@@ -3,16 +3,12 @@
 const express = require('express');
 const router = express.Router();
 
-// Import route modules
 const scheduleRoutes = require('./schedule');
-const programRoutes = require('./programs');
-const instructorRoutes = require('./instructors');
-const contactRoutes = require('./contact');
+const instructorRoutes = require('./instructor'); // Assuming you have this file
+const programRoutes = require('./program'); // Assuming you have this file
 
-// Use route modules
 router.use('/schedule', scheduleRoutes);
-router.use('/programs', programRoutes);
-router.use('/instructors', instructorRoutes);
-router.use('/contact', contactRoutes);
+router.use('/instructor', instructorRoutes);
+router.use('/program', programRoutes);
 
 module.exports = router;
