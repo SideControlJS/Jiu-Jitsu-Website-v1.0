@@ -1,59 +1,55 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const AddProgram = () => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleAddProgram = async (e) => {
     e.preventDefault();
-    setSuccessMessage('');  // Clear any previous messages
-    setErrorMessage('');
-
     try {
-      const response = await axios.post('http://localhost:5000/api/program', {
-        name,
-        description
-      });
-      setSuccessMessage(`Program '${response.data.name}' added successfully!`);
-      setName('');
-      setDescription('');
-    } catch (error) {
-      console.error('Error adding program:', error);
-      setErrorMessage('Failed to add program. Please try again.');
+      const token = localStorage.getItem('token'); // Get token from local storage
+      const response = await axios.post(
+        'http://localhost:5000/api/program',
+        { name, description },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      navigate('/dashboard'); // Redirect after successful addition
+    } catch (err) {
+      setError('Error adding program.');
     }
   };
 
   return (
     <div>
-      <h2>Add New Program</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Program Name</label>
-          <input 
-            type="text" 
-            value={name} 
-            onChange={(e) => setName(e.target.value)} 
-            required 
-          />
-        </div>
-        <div>
-          <label>Program Description</label>
-          <textarea 
-            value={description} 
-            onChange={(e) => setDescription(e.target.value)} 
-            required 
-          ></textarea>
-        </div>
+      <h2>Add Program</h2>
+      {error && <p>{error}</p>}
+      <form onSubmit={handleAddProgram}>
+        <input
+          type="text"
+          placeholder="Program Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
         <button type="submit">Add Program</button>
       </form>
-      {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
-      {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
     </div>
   );
 };
 
 export default AddProgram;
+
 

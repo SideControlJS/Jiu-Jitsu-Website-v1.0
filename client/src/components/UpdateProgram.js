@@ -3,67 +3,66 @@ import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 
 const UpdateProgram = () => {
-  const { id } = useParams(); // Get the program ID from the URL
-  const navigate = useNavigate(); // To navigate after update
-  const [programData, setProgramData] = useState({
-    name: '',
-    description: ''
-  });
+  const { id } = useParams(); // Get program ID from URL
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch the current program details to populate the form
     const fetchProgram = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/program/${id}`);
-        setProgramData(response.data);
-      } catch (error) {
-        console.error('Error fetching program:', error);
+        const token = localStorage.getItem('token'); // Get token from local storage
+        const response = await axios.get(`http://localhost:5000/api/program/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setName(response.data.name);
+        setDescription(response.data.description);
+      } catch (err) {
+        setError('Error fetching program.');
       }
     };
-
     fetchProgram();
   }, [id]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setProgramData({
-      ...programData,
-      [name]: value
-    });
-  };
-
-  const handleSubmit = async (e) => {
+  const handleUpdateProgram = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:5000/api/program/${id}`, programData);
-      alert('Program updated successfully!');
-      navigate('/programs'); // Redirect to the program list or another page
-    } catch (error) {
-      console.error('Error updating program:', error);
+      const token = localStorage.getItem('token');
+      await axios.put(
+        `http://localhost:5000/api/program/${id}`,
+        { name, description },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      navigate('/dashboard'); // Redirect after successful update
+    } catch (err) {
+      setError('Error updating program.');
     }
   };
 
   return (
     <div>
       <h2>Update Program</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Name:</label>
-          <input
-            type="text"
-            name="name"
-            value={programData.name}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <label>Description:</label>
-          <textarea
-            name="description"
-            value={programData.description}
-            onChange={handleChange}
-          ></textarea>
-        </div>
+      {error && <p>{error}</p>}
+      <form onSubmit={handleUpdateProgram}>
+        <input
+          type="text"
+          placeholder="Program Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
         <button type="submit">Update Program</button>
       </form>
     </div>
@@ -71,3 +70,4 @@ const UpdateProgram = () => {
 };
 
 export default UpdateProgram;
+
