@@ -11,7 +11,7 @@ function MainApp() {
   return (
     <Router>
       <Routes>
-        <Route path="/programs/update/:id" element={<UpdateProgram />} /> {/* Added route for UpdateProgram */}
+        <Route path="/update-program/:id" element={<UpdateProgram />} /> {/* Added route for UpdateProgram */}
         <Route path="/add-program" element={<AddProgram />} /> {/* Added route for AddProgram */}
         <Route path="/schedule" element={<Schedule />} />
         <Route path="/facilities" element={<Facilities />} />
