@@ -1,3 +1,5 @@
+import React from "react";
+
 const Map = () => (
     <div>
       <h2>Gym Location</h2>
