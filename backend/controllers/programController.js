@@ -25,14 +25,19 @@ exports.getProgramById = async (req, res) => {
 
 // Create a new program
 exports.createProgram = async (req, res) => {
+  const program = new Program({
+    name: req.body.name,
+    description: req.body.description,
+  });
+
   try {
-    const newProgram = new Program(req.body);
-    await newProgram.save();
-    res.status(201).json(newProgram);
+    const newProgram = await program.save();
+    res.status(201).json(newProgram); // Respond with the newly created program
   } catch (error) {
-    res.status(400).json({ message: 'Error creating program', error });
+    res.status(400).json({ message: error.message });
   }
 };
+
 
 // Update a program
 exports.updateProgram = async (req, res) => {
