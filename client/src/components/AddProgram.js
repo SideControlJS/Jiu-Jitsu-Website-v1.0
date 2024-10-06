@@ -5,13 +5,19 @@ import { useNavigate } from 'react-router-dom';
 const AddProgram = () => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [error, setError] = useState('');
-  const navigate = useNavigate();
+  const [error, setError] = useState(null);
+  const navigate = useNavigate(); // Initialize navigate
 
   const handleAddProgram = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem('token'); // Get token from local storage
+      const token = localStorage.getItem('token'); 
+      if (!token) {
+        setError('No token found.');
+        return;
+      }
+      console.log('Token:', token); // Check if the token exists
+  
       const response = await axios.post(
         'http://localhost:5000/api/program',
         { name, description },
@@ -21,8 +27,10 @@ const AddProgram = () => {
           },
         }
       );
-      navigate('/dashboard'); // Redirect after successful addition
+      console.log('Program added:', response.data); 
+      navigate('/dashboard'); 
     } catch (err) {
+      console.log('Error:', err.response ? err.response.data : err.message);
       setError('Error adding program.');
     }
   };
@@ -32,18 +40,21 @@ const AddProgram = () => {
       <h2>Add Program</h2>
       {error && <p>{error}</p>}
       <form onSubmit={handleAddProgram}>
-        <input
-          type="text"
-          placeholder="Program Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
+        <div>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Program Name"
+          />
+        </div>
+        <div>
+          <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Program Description"
+          />
+        </div>
         <button type="submit">Add Program</button>
       </form>
     </div>
@@ -51,5 +62,6 @@ const AddProgram = () => {
 };
 
 export default AddProgram;
+
 
 
